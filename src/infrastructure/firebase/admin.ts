@@ -1,10 +1,10 @@
 import "server-only";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import { getServerEnv } from "@/lib/env/server";
+import { getFirebaseAdminEnv } from "@/lib/env/server";
 
 export function getFirebaseAdminAuth() {
-  const env = getServerEnv();
+  const env = getFirebaseAdminEnv();
   const app = getApps()[0] ?? initializeApp({
     credential: cert({
       projectId: env.FIREBASE_ADMIN_PROJECT_ID,

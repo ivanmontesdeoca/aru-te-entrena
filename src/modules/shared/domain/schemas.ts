@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const uuidSchema = z.string().uuid();
+export const catalogoIdSchema = z.string().trim().min(1).max(200);
 export const isoDateSchema = z.iso.date();
 export const isoDateTimeSchema = z.iso.datetime({ offset: true });
 export const optionalTextSchema = z.string().trim().max(2000).default("");

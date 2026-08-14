@@ -1,21 +1,25 @@
 import "server-only";
 import { google, type sheets_v4 } from "googleapis";
-import { getServerEnv } from "@/lib/env/server";
+import { getGoogleSheetsEnv } from "@/lib/env/server";
+import type { SheetCell, SheetsDataSource, SheetTable } from "./data-source";
 import type { SheetName } from "./sheet-names";
 
-export class GoogleSheetsClient {
+export class GoogleSheetsClient implements SheetsDataSource {
   private readonly spreadsheetId: string;
   private readonly api: sheets_v4.Sheets;
 
   constructor() {
-    const env = getServerEnv();
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL,
-        private_key: env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
-      },
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
+    const env = getGoogleSheetsEnv();
+    const scopes = ["https://www.googleapis.com/auth/spreadsheets"];
+    const auth = env.GOOGLE_APPLICATION_CREDENTIALS
+      ? new google.auth.GoogleAuth({ scopes })
+      : new google.auth.GoogleAuth({
+          credentials: {
+            client_email: env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL,
+            private_key: env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
+          },
+          scopes,
+        });
     this.spreadsheetId = env.GOOGLE_SHEETS_SPREADSHEET_ID;
     this.api = google.sheets({ version: "v4", auth });
   }
@@ -28,7 +32,24 @@ export class GoogleSheetsClient {
     return (response.data.values ?? []).map((row) => row.map(String));
   }
 
-  async appendRow(sheet: SheetName, values: readonly unknown[]): Promise<void> {
+  async readTable(sheet: SheetName): Promise<SheetTable> {
+    const response = await this.api.spreadsheets.values.get({
+      spreadsheetId: this.spreadsheetId,
+      range: `'${sheet}'`,
+      valueRenderOption: "FORMATTED_VALUE",
+      majorDimension: "ROWS",
+    });
+    const [headerRow = [], ...dataRows] = response.data.values ?? [];
+    return {
+      headers: headerRow.map(String),
+      rows: dataRows.map((values, index) => ({
+        rowNumber: index + 2,
+        values: values.map((value) => value as SheetCell),
+      })),
+    };
+  }
+
+  async appendRow(sheet: SheetName, values: readonly SheetCell[]): Promise<void> {
     await this.api.spreadsheets.values.append({
       spreadsheetId: this.spreadsheetId,
       range: `'${sheet}'!A:A`,
@@ -38,7 +59,7 @@ export class GoogleSheetsClient {
     });
   }
 
-  async updateRow(sheet: SheetName, rowNumber: number, values: readonly unknown[]): Promise<void> {
+  async updateRow(sheet: SheetName, rowNumber: number, values: readonly SheetCell[]): Promise<void> {
     if (!Number.isInteger(rowNumber) || rowNumber < 2) throw new Error("Invalid data row number");
     await this.api.spreadsheets.values.update({
       spreadsheetId: this.spreadsheetId,

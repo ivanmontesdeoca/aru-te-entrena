@@ -18,11 +18,13 @@
 *credentials*.json
 *service-account*.json
 firebase-adminsdk*.json
+aru-te-entrena-*.json
 *.pem
 *.key
 *.p12
 *.pfx
 /secrets/
+/credentials/
 
 # logs and tooling
 npm-debug.log*
