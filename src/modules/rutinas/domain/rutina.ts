@@ -1,0 +1,3 @@
+import type { DiaEntrenamiento, ISODate, UUID } from "@/modules/shared/domain/primitives";
+export interface RutinaSesion { Rutina_Sesion_ID: UUID; Alumno_ID: UUID; Dia_Entrenamiento_Semana: DiaEntrenamiento; Fecha: ISODate; Titulo: string; Notas_Generales: string; Plantilla_Sesion_Origen_ID: UUID | null; Entrenamiento_Completado: boolean; Fecha_Completado: ISODate | null; }
+export interface RutinaEjercicio { Rutina_Ejercicio_ID: UUID; Rutina_Sesion_ID: UUID; Catalogo_ID: UUID; Tipo_Bloque: string; Orden_Bloque: number; Orden_Ejercicio: number; Instrumento_Alternativo: string; Reps_Tiempo: string; Series: string; Carga: string; Descanso: string; RIR: string; Observaciones: string; }

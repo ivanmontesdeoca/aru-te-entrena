@@ -1,0 +1,4 @@
+import { z } from "zod";
+import { isoDateSchema, optionalTextSchema, positiveOrderSchema, requiredTextSchema, uuidSchema } from "@/modules/shared/domain/schemas";
+export const plantillaSesionSchema = z.object({ Plantilla_Sesion_ID: uuidSchema, Fecha_Carga: isoDateSchema, Nombre_Plantilla: requiredTextSchema, Objetivo: requiredTextSchema, Grupo_Muscular_1: requiredTextSchema, Grupo_Muscular_2: optionalTextSchema, Notas: optionalTextSchema });
+export const plantillaEjercicioSchema = z.object({ Plantilla_Ejercicio_ID: uuidSchema, Plantilla_Sesion_ID: uuidSchema, Tipo_Bloque: requiredTextSchema, Orden_Bloque: positiveOrderSchema, Orden_Ejercicio: positiveOrderSchema, Catalogo_ID: uuidSchema, Reps_Tiempo: optionalTextSchema, Series: optionalTextSchema, Carga: optionalTextSchema, Descanso: optionalTextSchema, RIR: optionalTextSchema, Observaciones: optionalTextSchema });
