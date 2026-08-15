@@ -26,3 +26,4 @@ La gestión de plantillas está documentada en `docs/plantillas.md`.
 La gestión administrativa de rutinas está documentada en `docs/rutinas.md`.
 La experiencia del alumno está documentada en `docs/experiencia-alumno.md`.
 El registro e historial de progreso está documentado en `docs/progreso.md`.
+La gestión administrativa de cobros está documentada en `docs/cobros.md`.
