@@ -40,3 +40,4 @@ El registro e historial de progreso está documentado en `docs/progreso.md`.
 La gestión administrativa de cobros está documentada en `docs/cobros.md`.
 La visión consolidada de capas, módulos, seguridad y lecturas principales está en `docs/arquitectura.md`.
 El modelo definitivo de las nueve hojas está en `docs/modelo-datos.md`.
+El asistente supervisado de planificación y su política de privacidad están en `docs/asistente-ia.md`.

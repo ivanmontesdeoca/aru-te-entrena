@@ -35,6 +35,10 @@ Variables necesarias:
 
 `ARU_TEST_BASE_URL` es opcional y se utiliza sólo para habilitar las comprobaciones HTTP de ciertas integraciones contra un servidor local ya iniciado.
 
+## OpenAI
+
+Configurar `OPENAI_API_KEY` como secreto exclusivo del servidor. La aplicación la usa para el asistente de planificación mediante Responses API y nunca la expone al navegador ni la incluye en logs. La política de privacidad del contexto está documentada en `docs/asistente-ia.md`.
+
 ## Sesión y autorización
 
 Firebase Authentication valida email y contraseña en el cliente con persistencia en memoria. El backend verifica el ID token, consulta `Usuarios` y emite una cookie `HttpOnly`, `SameSite=Lax`, segura en producción y limitada a cinco días. Cada acceso privado vuelve a consultar `Usuarios.Activo`, `Rol` y `Alumno_ID`.

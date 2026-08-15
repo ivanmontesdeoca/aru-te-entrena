@@ -1,0 +1,2 @@
+export type AiPlanningErrorCode = "ALUMNO_NOT_FOUND"|"EMPTY_CATALOG"|"INVALID_CATALOG_REFERENCE"|"INVALID_MODEL_RESPONSE"|"OPENAI_UNAVAILABLE"|"OPENAI_RATE_LIMIT"|"OPENAI_NOT_CONFIGURED";
+export class AiPlanningError extends Error { constructor(public readonly code:AiPlanningErrorCode,public readonly status:400|404|429|500|503=400,options?:ErrorOptions){super(code,options);this.name="AiPlanningError";} }
