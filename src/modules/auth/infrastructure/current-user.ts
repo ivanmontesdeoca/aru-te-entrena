@@ -1,15 +1,16 @@
 import "server-only";
 import { cookies } from "next/headers";
+import { cache } from "react";
 import type { Role } from "@/modules/shared/domain/primitives";
 import type { AuthenticatedUser } from "../domain/authenticated-user";
 import { AuthError } from "../domain/errors";
 import { createAuthService } from "./auth-service-factory";
 import { SESSION_COOKIE_NAME } from "./session-cookie";
 
-export async function getCurrentUser(): Promise<AuthenticatedUser> {
+export const getCurrentUser = cache(async (): Promise<AuthenticatedUser> => {
   const cookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value ?? "";
   return createAuthService().resolveSession(cookie);
-}
+});
 
 export async function getOptionalCurrentUser(): Promise<AuthenticatedUser | null> {
   try {
@@ -21,8 +22,9 @@ export async function getOptionalCurrentUser(): Promise<AuthenticatedUser | null
 }
 
 export async function requireRole(role: Role): Promise<AuthenticatedUser> {
-  const cookie = (await cookies()).get(SESSION_COOKIE_NAME)?.value ?? "";
-  return createAuthService().resolveSession(cookie, role);
+  const user = await getCurrentUser();
+  if (user.role !== role) throw new AuthError("ROLE_FORBIDDEN", 403);
+  return user;
 }
 
 export function requireAdmin(): Promise<AuthenticatedUser> {

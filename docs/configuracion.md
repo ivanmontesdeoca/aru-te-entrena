@@ -27,6 +27,14 @@ Copiar `.env.example` como `.env.local` para desarrollo y completar valores real
 
 Las variables sin prefijo `NEXT_PUBLIC_` son secretas y nunca deben referenciarse desde componentes de cliente.
 
+Variables necesarias:
+
+- públicas: `NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`, `NEXT_PUBLIC_FIREBASE_PROJECT_ID`, `NEXT_PUBLIC_FIREBASE_APP_ID`;
+- servidor: `FIREBASE_ADMIN_PROJECT_ID`, `GOOGLE_SHEETS_SPREADSHEET_ID` y, en desarrollo local, `GOOGLE_APPLICATION_CREDENTIALS`;
+- alternativas heredadas opcionales: pares de email y clave privada de Firebase Admin o Google Sheets declarados en `.env.example`.
+
+`ARU_TEST_BASE_URL` es opcional y se utiliza sólo para habilitar las comprobaciones HTTP de ciertas integraciones contra un servidor local ya iniciado.
+
 ## Sesión y autorización
 
 Firebase Authentication valida email y contraseña en el cliente con persistencia en memoria. El backend verifica el ID token, consulta `Usuarios` y emite una cookie `HttpOnly`, `SameSite=Lax`, segura en producción y limitada a cinco días. Cada acceso privado vuelve a consultar `Usuarios.Activo`, `Rol` y `Alumno_ID`.
