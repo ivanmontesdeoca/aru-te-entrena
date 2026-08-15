@@ -1,11 +1,26 @@
 import "server-only";
 import { z } from "zod";
 
-const firebaseAdminEnvSchema = z.object({
-  FIREBASE_ADMIN_PROJECT_ID: z.string().min(1),
-  FIREBASE_ADMIN_CLIENT_EMAIL: z.string().email(),
-  FIREBASE_ADMIN_PRIVATE_KEY: z.string().min(1),
-});
+const firebaseAdminEnvSchema = z
+  .object({
+    FIREBASE_ADMIN_PROJECT_ID: z.string().min(1),
+    GOOGLE_APPLICATION_CREDENTIALS: z.string().min(1).optional(),
+    FIREBASE_ADMIN_CLIENT_EMAIL: z.string().email().optional(),
+    FIREBASE_ADMIN_PRIVATE_KEY: z.string().min(1).optional(),
+  })
+  .superRefine((env, context) => {
+    const hasApplicationCredentials = Boolean(env.GOOGLE_APPLICATION_CREDENTIALS);
+    const hasLegacyCredentials = Boolean(
+      env.FIREBASE_ADMIN_CLIENT_EMAIL && env.FIREBASE_ADMIN_PRIVATE_KEY,
+    );
+    if (!hasApplicationCredentials && !hasLegacyCredentials) {
+      context.addIssue({
+        code: "custom",
+        message:
+          "Configure GOOGLE_APPLICATION_CREDENTIALS or both legacy Firebase Admin variables",
+      });
+    }
+  });
 
 const googleSheetsEnvSchema = z
   .object({
@@ -33,7 +48,7 @@ export function getFirebaseAdminEnv() {
   const env = firebaseAdminEnvSchema.parse(process.env);
   return {
     ...env,
-    FIREBASE_ADMIN_PRIVATE_KEY: env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    FIREBASE_ADMIN_PRIVATE_KEY: env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, "\n"),
   };
 }
 

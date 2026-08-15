@@ -19,3 +19,4 @@ pnpm build
 
 La configuración de servicios externos está documentada en `docs/configuracion.md`.
 La arquitectura de persistencia está resumida en `docs/persistencia-google-sheets.md`.
+El flujo de autenticación y autorización está documentado en `docs/autenticacion.md`.

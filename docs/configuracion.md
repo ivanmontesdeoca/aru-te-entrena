@@ -4,7 +4,7 @@
 
 1. Crear un proyecto de Firebase y habilitar el proveedor **Email/Password**.
 2. Registrar una aplicación web y copiar su configuración pública en las variables `NEXT_PUBLIC_FIREBASE_*`.
-3. Crear credenciales de servicio para Firebase Admin y configurar las variables `FIREBASE_ADMIN_*` exclusivamente en el servidor.
+3. Configurar `FIREBASE_ADMIN_PROJECT_ID`. Firebase Admin reutiliza `GOOGLE_APPLICATION_CREDENTIALS` mediante Application Default Credentials.
 4. Configurar el dominio autorizado y la plantilla del email usado para establecer/restablecer contraseña.
 
 ## Google Sheets
@@ -26,6 +26,10 @@ El contenido del archivo JSON nunca debe imprimirse, registrarse ni exponerse al
 Copiar `.env.example` como `.env.local` para desarrollo y completar valores reales sin versionarlos. En Vercel, cargar las mismas variables desde la configuración del proyecto, separando Development, Preview y Production.
 
 Las variables sin prefijo `NEXT_PUBLIC_` son secretas y nunca deben referenciarse desde componentes de cliente.
+
+## Sesión y autorización
+
+Firebase Authentication valida email y contraseña en el cliente con persistencia en memoria. El backend verifica el ID token, consulta `Usuarios` y emite una cookie `HttpOnly`, `SameSite=Lax`, segura en producción y limitada a cinco días. Cada acceso privado vuelve a consultar `Usuarios.Activo`, `Rol` y `Alumno_ID`.
 
 ## Convenciones numéricas
 

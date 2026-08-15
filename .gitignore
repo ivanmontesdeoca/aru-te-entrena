@@ -37,6 +37,7 @@ next-env.d.ts
 /.vercel/
 /.turbo/
 /coverage/
+/.codex-tmp/
 
 # local Codex working and delivery directories
 /work/
