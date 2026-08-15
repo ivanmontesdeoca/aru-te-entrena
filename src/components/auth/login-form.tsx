@@ -27,6 +27,7 @@ export function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [inactive, setInactive] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -49,6 +50,7 @@ export function LoginForm() {
       });
       const payload = (await response.json()) as { role?: "ADMIN" | "ALUMNO"; error?: string };
       if (!response.ok || !payload.role) {
+        if (payload.error === "USER_INACTIVE") throw new Error(`${safeServerErrorPrefix}INACTIVE`);
         throw new Error(
           `${safeServerErrorPrefix}${serverMessages[payload.error ?? ""] ?? "No pudimos iniciar sesión."}`,
         );
@@ -62,12 +64,13 @@ export function LoginForm() {
         reason instanceof Error && reason.message.startsWith(safeServerErrorPrefix)
           ? reason.message.slice(safeServerErrorPrefix.length)
           : "Email o contraseña incorrectos.";
-      setError(message);
+      if (message === "INACTIVE") setInactive(true); else setError(message);
     } finally {
       setLoading(false);
     }
   }
 
+  if (inactive) return <section className="space-y-5 text-center"><div className="mx-auto flex size-12 items-center justify-center rounded-full bg-orange-50 text-xl" aria-hidden>!</div><div><h2 className="text-xl font-extrabold">Tu acceso no se encuentra activo.</h2><p className="mt-2 text-sm text-slate-600">Para consultar el estado de tu cuenta, comunicate con tu entrenadora.</p></div><Button className="w-full border border-violet-700 bg-white text-violet-700 shadow-none hover:bg-violet-50" onClick={()=>{setInactive(false);setPassword("");setEmail("")}}>Cerrar sesión</Button></section>;
   return (
     <form className="space-y-5" onSubmit={handleSubmit}>
       <div className="space-y-2">

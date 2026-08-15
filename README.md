@@ -41,3 +41,4 @@ La gestión administrativa de cobros está documentada en `docs/cobros.md`.
 La visión consolidada de capas, módulos, seguridad y lecturas principales está en `docs/arquitectura.md`.
 El modelo definitivo de las nueve hojas está en `docs/modelo-datos.md`.
 El asistente supervisado de planificación y su política de privacidad están en `docs/asistente-ia.md`.
+La identidad de marca, paleta y reglas responsive están documentadas en `docs/diseno-visual.md`.

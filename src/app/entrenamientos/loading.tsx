@@ -1,1 +1,1 @@
-export default function EntrenamientosLoading() { return <main className="mx-auto max-w-3xl px-4 py-10"><p className="animate-pulse text-slate-600" role="status">Cargando entrenamientos…</p></main>; }
+export default function EntrenamientosLoading() { return <main className="mx-auto max-w-3xl space-y-4 px-4 py-10" role="status"><div className="h-8 w-64 animate-pulse rounded bg-slate-200"/><div className="h-52 animate-pulse rounded-2xl bg-white shadow-sm"/><span className="sr-only">Cargando entrenamientos…</span></main>; }

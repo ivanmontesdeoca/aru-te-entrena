@@ -13,5 +13,5 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     throw error;
   }
   if (user.role !== "ADMIN") redirect("/entrenamientos");
-  return <div className="min-h-screen bg-slate-50"><AdminHeader />{children}</div>;
+  return <div className="min-h-screen"><AdminHeader />{children}</div>;
 }

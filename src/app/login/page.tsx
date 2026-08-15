@@ -8,7 +8,7 @@ export default async function LoginPage() {
   if (user) redirect(user.role === "ADMIN" ? "/admin" : "/entrenamientos");
   return (
     <AuthShell
-      eyebrow="Aru te entrena"
+      eyebrow="Acceso a tu espacio"
       title="Bienvenido de nuevo"
       description="Ingresá para consultar y administrar tus entrenamientos."
     >
