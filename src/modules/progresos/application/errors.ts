@@ -1,0 +1,1 @@
+export class ProgresoError extends Error { constructor(public readonly code: "RUTINA_EJERCICIO_NOT_FOUND" | "RUTINA_NOT_FOUND" | "PROGRESS_NOT_FOUND" | "FORBIDDEN", public readonly status = 404) { super(code); } }

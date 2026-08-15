@@ -1,0 +1,3 @@
+import type { RegistroProgreso } from "@/modules/progresos/domain/registro-progreso";
+export function metricParts(record: Pick<RegistroProgreso, "Meta_Peso" | "Meta_Repeticiones" | "Meta_Tiempo">) { return [record.Meta_Peso !== null ? `${record.Meta_Peso} kg` : null, record.Meta_Repeticiones !== null ? `${record.Meta_Repeticiones} repeticiones` : null, record.Meta_Tiempo !== null ? `${record.Meta_Tiempo} s` : null].filter(Boolean) as string[]; }
+export function ProgressMetrics({ record }: { record: Pick<RegistroProgreso, "Meta_Peso" | "Meta_Repeticiones" | "Meta_Tiempo"> }) { return <>{metricParts(record).join(" · ")}</>; }
