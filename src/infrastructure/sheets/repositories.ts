@@ -30,7 +30,6 @@ import {
   rutinaSesionMapper,
   usuarioMapper,
 } from "./entity-mappers";
-import { UnsupportedRepositoryOperationError } from "./errors";
 import { GoogleSheetsClient } from "./google-sheets-client";
 import { SHEET_NAMES } from "./sheet-names";
 
@@ -197,6 +196,16 @@ export class GoogleSheetsRutinaSesionRepository
       Fecha_Completado: completedAt,
     });
   }
+
+  async removeCreated(id: UUID): Promise<void> {
+    const table = await this.loadTable();
+    const current = this.mapEntities(table).find((item) => item.id === id);
+    if (!current) return;
+    await this.dataSource.batchUpdateRows(this.sheet, [{
+      rowNumber: current.rowNumber,
+      values: table.headers.map(() => ""),
+    }]);
+  }
 }
 
 export class GoogleSheetsRutinaEjercicioRepository
@@ -218,15 +227,7 @@ export class GoogleSheetsRutinaEjercicioRepository
   }
 
   async replaceForSesion(rutinaSesionId: UUID, ejercicios: RutinaEjercicio[]): Promise<void> {
-    const current = await this.findBySesion(rutinaSesionId);
-    const nextIds = new Set(ejercicios.map((item) => item.Rutina_Ejercicio_ID));
-    const removed = current.filter((item) => !nextIds.has(item.Rutina_Ejercicio_ID));
-    if (removed.length) {
-      throw new UnsupportedRepositoryOperationError(
-        "replaceForSesion cannot remove rows because physical deletion is disabled",
-      );
-    }
-    for (const ejercicio of ejercicios) await this.save(ejercicio);
+    const table=await this.loadTable();const loaded=this.mapEntities(table);const current=loaded.filter(item=>item.entity.Rutina_Sesion_ID===rutinaSesionId);const ids=new Set(ejercicios.map(item=>item.Rutina_Ejercicio_ID));if(ids.size!==ejercicios.length)throw new Error("Rutina_Ejercicio_ID duplicated in replacement");const byId=new Map(current.map(item=>[item.id,item]));const reusable=current.filter(item=>!ids.has(item.id)).map(item=>item.rowNumber);let next=Math.max(1,...table.rows.map(row=>row.rowNumber))+1;const changes=ejercicios.map(item=>({rowNumber:byId.get(item.Rutina_Ejercicio_ID)?.rowNumber??reusable.shift()??next++,values:this.recordToRow(this.mapper.toRecord(item),table.headers)}));changes.push(...reusable.map(rowNumber=>({rowNumber,values:table.headers.map(()=>"")})));await this.dataSource.batchUpdateRows(this.sheet,changes);
   }
 }
 

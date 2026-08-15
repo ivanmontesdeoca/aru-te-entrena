@@ -1,0 +1,1 @@
+export type RutinaErrorCode="RUTINA_NOT_FOUND"|"ALUMNO_NOT_FOUND"|"PLANTILLA_NOT_FOUND"|"CATALOGO_NOT_FOUND"|"ARCHIVED_EXERCISE_NOT_AVAILABLE"|"EXERCISE_HAS_PROGRESS";export class RutinaAdminError extends Error{constructor(public readonly code:RutinaErrorCode,public readonly status=404){super(code);this.name="RutinaAdminError";}}
