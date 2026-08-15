@@ -10,7 +10,10 @@ export interface FirebaseSessionGateway {
   verifyIdToken(token: string, checkRevoked?: boolean): Promise<DecodedIdToken>;
   createSessionCookie(token: string, options: { expiresIn: number }): Promise<string>;
   verifySessionCookie(cookie: string, checkRevoked?: boolean): Promise<DecodedIdToken>;
+  getUser(uid: string): Promise<{ customClaims?: Record<string, unknown> }>;
 }
+
+const ACCESS_VERSION_CLAIM = "aruAccessVersion";
 
 export class AuthService {
   constructor(
@@ -26,7 +29,17 @@ export class AuthService {
     try {
       decoded = await this.firebase.verifyIdToken(idToken, true);
     } catch (error) {
-      throw new AuthError("INVALID_TOKEN", 401, { cause: error });
+      try {
+        decoded = await this.firebase.verifyIdToken(idToken, false);
+        const current = (await this.firebase.getUser(decoded.uid)).customClaims?.[ACCESS_VERSION_CLAIM];
+        if (typeof current !== "string" || decoded[ACCESS_VERSION_CLAIM] !== current) throw error;
+      } catch (fallbackError) {
+        throw new AuthError("INVALID_TOKEN", 401, { cause: fallbackError });
+      }
+    }
+    const current = (await this.firebase.getUser(decoded.uid)).customClaims?.[ACCESS_VERSION_CLAIM];
+    if (typeof current === "string" && decoded[ACCESS_VERSION_CLAIM] !== current) {
+      throw new AuthError("INVALID_TOKEN", 401);
     }
     const user = await this.resolveUser(decoded.uid);
     const cookie = await this.firebase.createSessionCookie(idToken, {

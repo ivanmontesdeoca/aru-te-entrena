@@ -12,6 +12,10 @@ export function getAlumnoAdminService() {
       createUser: async (email) => auth.createUser({ email, emailVerified: false, disabled: false }),
       deleteUser: (uid) => auth.deleteUser(uid),
       revokeRefreshTokens: (uid) => auth.revokeRefreshTokens(uid),
+      rotateAccessVersion: async (uid, version) => {
+        const user = await auth.getUser(uid);
+        await auth.setCustomUserClaims(uid, { ...user.customClaims, aruAccessVersion: version });
+      },
     },
   });
 }

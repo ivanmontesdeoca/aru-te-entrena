@@ -8,6 +8,7 @@ import type { Usuario } from "@/modules/usuarios/domain/usuario";
 import type { UsuarioRepository } from "@/modules/usuarios/domain/repository";
 
 class FakeFirebase implements FirebaseSessionGateway {
+  async getUser(): Promise<{ customClaims?: Record<string, unknown> }> { return {}; }
   async verifyIdToken(token: string): Promise<DecodedIdToken> {
     if (token === "invalid") throw new Error("invalid");
     return { uid: token } as DecodedIdToken;

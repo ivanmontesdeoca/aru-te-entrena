@@ -11,6 +11,7 @@ export interface FirebaseUserAdminGateway {
   createUser(email: string): Promise<{ uid: string }>;
   deleteUser(uid: string): Promise<void>;
   revokeRefreshTokens(uid: string): Promise<void>;
+  rotateAccessVersion(uid: string, version: string): Promise<void>;
 }
 
 export function createAlumnoAdminService(dependencies: {
@@ -89,8 +90,9 @@ export function createAlumnoAdminService(dependencies: {
     async setAccess(alumnoId: string, active: boolean) {
       const access = await getAccess(alumnoId);
       if (!access) throw new AlumnoAdminError("ACCESS_NOT_FOUND", 404);
-      await usuarios.setActive(access.Usuario_ID, active);
+      await firebase.rotateAccessVersion(access.UID_Auth, randomUUID());
       if (!active) await firebase.revokeRefreshTokens(access.UID_Auth);
+      await usuarios.setActive(access.Usuario_ID, active);
       return { ...access, Activo: active };
     },
   };

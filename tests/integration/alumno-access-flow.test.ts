@@ -35,7 +35,7 @@ after(async()=>{
 describe("real ALUMNO invitation and access flow",()=>{
   it("creates, establishes password, authenticates, authorizes and toggles access",async()=>{
     const firebase=getFirebaseAdminAuth(); const alumnos=new GoogleSheetsAlumnoRepository(); const usuarios=new GoogleSheetsUsuarioRepository();
-    const admin=createAlumnoAdminService({alumnos,usuarios,firebase:{createUser:async(email)=>firebase.createUser({email}),deleteUser:(uid)=>firebase.deleteUser(uid),revokeRefreshTokens:(uid)=>firebase.revokeRefreshTokens(uid)}});
+    const admin=createAlumnoAdminService({alumnos,usuarios,firebase:{createUser:async(email)=>firebase.createUser({email}),deleteUser:(uid)=>firebase.deleteUser(uid),revokeRefreshTokens:(uid)=>firebase.revokeRefreshTokens(uid),rotateAccessVersion:async(uid,version)=>{const user=await firebase.getUser(uid);await firebase.setCustomUserClaims(uid,{...user.customClaims,aruAccessVersion:version});}}});
     const suffix=`${Date.now()}.${randomUUID().slice(0,8)}`; const email=`aru.etapa4.test.${suffix}@example.com`;
     await alumnos.create({Alumno_ID:alumnoId,Documento:`ARU-TEST-${suffix}`,Nombre:"PRUEBA",Apellido:"ETAPA 4",Fecha_Nacimiento:"1990-01-01",Celular:"0000000000",Mail:email,Fecha_Alta:new Date().toISOString().slice(0,10),Objetivo:"PRUEBA DE INTEGRACION",Dolencia:"",Observaciones:"ARU_TEST_ETAPA_4 - eliminación controlada al finalizar"});
     const access=await admin.createAccess(alumnoId,email); usuarioId=access.Usuario_ID; firebaseUid=access.UID_Auth;
