@@ -5,7 +5,8 @@ export type AuthErrorCode =
   | "DUPLICATE_AUTH_USER"
   | "USER_INACTIVE"
   | "ROLE_FORBIDDEN"
-  | "ALUMNO_NOT_LINKED";
+  | "ALUMNO_NOT_LINKED"
+  | "UNTRUSTED_ORIGIN";
 
 export class AuthError extends Error {
   constructor(

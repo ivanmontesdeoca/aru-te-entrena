@@ -1,4 +1,4 @@
-import { LogoutButton } from "@/components/auth/logout-button";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { requireAdmin } from "@/modules/auth/infrastructure/current-user";
 
@@ -9,8 +9,8 @@ export default async function AdminPage() {
       <Card className="space-y-5">
         <p className="text-sm font-bold uppercase tracking-widest text-violet-700">Área administrativa</p>
         <h1 className="text-3xl font-bold">Hola, entrenadora</h1>
-        <p className="text-slate-600">Sesión activa como {user.email}. Los módulos administrativos se implementarán en próximas etapas.</p>
-        <LogoutButton />
+        <p className="text-slate-600">Sesión activa como {user.email}.</p>
+        <Link className="inline-flex min-h-11 items-center rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white" href="/admin/alumnos">Gestionar alumnos</Link>
       </Card>
     </main>
   );
