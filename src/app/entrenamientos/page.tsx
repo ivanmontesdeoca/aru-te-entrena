@@ -1,17 +1,8 @@
-import { LogoutButton } from "@/components/auth/logout-button";
+import Link from "next/link";
+import { AlumnoHeader } from "@/components/alumno/alumno-header";
 import { Card } from "@/components/ui/card";
-import { requireAlumno } from "@/modules/auth/infrastructure/current-user";
-
-export default async function EntrenamientosPage() {
-  const user = await requireAlumno();
-  return (
-    <main className="mx-auto min-h-screen max-w-2xl px-5 py-10">
-      <Card className="space-y-5">
-        <p className="text-sm font-bold uppercase tracking-widest text-violet-700">Mis entrenamientos</p>
-        <h1 className="text-3xl font-bold">Tu espacio de entrenamiento</h1>
-        <p className="text-slate-600">Sesión activa como {user.email}. Las rutinas se incorporarán en próximas etapas.</p>
-        <LogoutButton />
-      </Card>
-    </main>
-  );
-}
+import { getAuthenticatedAlumnoId } from "@/modules/auth/infrastructure/current-user";
+import { getEntrenamientoAlumnoService } from "@/modules/entrenamientos/infrastructure/entrenamiento-alumno-service-factory";
+import type { RutinaSesion } from "@/modules/rutinas/domain/rutina";
+function RoutineCard({ session, label }: { session: RutinaSesion; label: string }) { return <Link href={`/entrenamientos/${session.Rutina_Sesion_ID}`}><Card className="h-full space-y-3 transition hover:border-violet-300"><div className="flex items-start justify-between gap-3"><div><p className="text-xs font-bold uppercase tracking-wide text-violet-700">{session.Dia_Entrenamiento_Semana}</p><h3 className="text-lg font-black">{session.Titulo}</h3></div><span className={`rounded-full px-3 py-1 text-xs font-bold ${session.Entrenamiento_Completado ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>{label}</span></div><p className="text-sm text-slate-600">Fecha planificada: {session.Fecha}</p><span className="inline-flex font-bold text-violet-700">Ver entrenamiento →</span></Card></Link>; }
+export default async function EntrenamientosPage() { const alumnoId = await getAuthenticatedAlumnoId(); const data = await getEntrenamientoAlumnoService().list(alumnoId); const total = data.upcoming.length + data.previous.length; const otherUpcoming = data.upcoming.filter(({ session }) => session.Rutina_Sesion_ID !== data.next?.Rutina_Sesion_ID); return <><AlumnoHeader /><main className="mx-auto max-w-3xl space-y-8 px-4 py-6 sm:px-6 sm:py-10"><div><p className="text-sm font-bold uppercase tracking-widest text-violet-700">Mis entrenamientos</p><h1 className="text-3xl font-black text-slate-950">Entrená a tu ritmo</h1></div>{!total ? <Card><p className="text-slate-700">Todavía no tenés entrenamientos asignados.</p></Card> : null}{data.next ? <section className="space-y-3"><h2 className="text-xl font-black">Próximo entrenamiento</h2><RoutineCard label="Próximo" session={data.next} /></section> : null}{otherUpcoming.length ? <section className="space-y-3"><h2 className="text-xl font-black">Próximos</h2><div className="grid gap-3 sm:grid-cols-2">{otherUpcoming.map(({ session, state }) => <RoutineCard key={session.Rutina_Sesion_ID} label={state === "completado" ? "Completado" : "Próximo"} session={session} />)}</div></section> : null}{data.previous.length ? <section className="space-y-3"><h2 className="text-xl font-black">Anteriores</h2><div className="grid gap-3 sm:grid-cols-2">{data.previous.map(({ session }) => <RoutineCard key={session.Rutina_Sesion_ID} label={session.Entrenamiento_Completado ? "Completado" : "Pendiente"} session={session} />)}</div></section> : null}</main></>; }

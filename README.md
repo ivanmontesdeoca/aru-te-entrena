@@ -24,3 +24,4 @@ La gestión administrativa de alumnos está documentada en `docs/gestion-alumnos
 El catálogo administrativo está documentado en `docs/catalogo-ejercicios.md`.
 La gestión de plantillas está documentada en `docs/plantillas.md`.
 La gestión administrativa de rutinas está documentada en `docs/rutinas.md`.
+La experiencia del alumno está documentada en `docs/experiencia-alumno.md`.
