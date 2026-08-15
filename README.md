@@ -21,3 +21,4 @@ La configuración de servicios externos está documentada en `docs/configuracion
 La arquitectura de persistencia está resumida en `docs/persistencia-google-sheets.md`.
 El flujo de autenticación y autorización está documentado en `docs/autenticacion.md`.
 La gestión administrativa de alumnos está documentada en `docs/gestion-alumnos.md`.
+El catálogo administrativo está documentado en `docs/catalogo-ejercicios.md`.
