@@ -84,7 +84,7 @@ export class GoogleSheetsRepository<TEntity> implements EntityRepository<TEntity
     }
   }
 
-  private mapEntities(table: SheetTable): Array<LoadedEntity<TEntity>> {
+  protected mapEntities(table: SheetTable): Array<LoadedEntity<TEntity>> {
     const loaded: Array<LoadedEntity<TEntity>> = [];
     const ids = new Map<string, number[]>();
     for (const row of table.rows) {
@@ -113,7 +113,7 @@ export class GoogleSheetsRepository<TEntity> implements EntityRepository<TEntity
     return Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ""]));
   }
 
-  private recordToRow(record: SheetRecord, headers: string[]): SheetCell[] {
+  protected recordToRow(record: SheetRecord, headers: string[]): SheetCell[] {
     return headers.map((header) => record[header] ?? "");
   }
 }

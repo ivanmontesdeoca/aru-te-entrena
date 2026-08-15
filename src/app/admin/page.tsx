@@ -10,7 +10,7 @@ export default async function AdminPage() {
         <p className="text-sm font-bold uppercase tracking-widest text-violet-700">Área administrativa</p>
         <h1 className="text-3xl font-bold">Hola, entrenadora</h1>
         <p className="text-slate-600">Sesión activa como {user.email}.</p>
-        <div className="flex flex-wrap gap-3"><Link className="inline-flex min-h-11 items-center rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white" href="/admin/alumnos">Gestionar alumnos</Link><Link className="inline-flex min-h-11 items-center rounded-lg border border-violet-700 px-4 py-2 font-semibold text-violet-700" href="/admin/ejercicios">Gestionar ejercicios</Link></div>
+        <div className="flex flex-wrap gap-3"><Link className="inline-flex min-h-11 items-center rounded-lg bg-violet-700 px-4 py-2 font-semibold text-white" href="/admin/alumnos">Gestionar alumnos</Link><Link className="inline-flex min-h-11 items-center rounded-lg border border-violet-700 px-4 py-2 font-semibold text-violet-700" href="/admin/ejercicios">Gestionar ejercicios</Link><Link className="inline-flex min-h-11 items-center rounded-lg border border-violet-700 px-4 py-2 font-semibold text-violet-700" href="/admin/plantillas">Gestionar plantillas</Link></div>
       </Card>
     </main>
   );

@@ -142,15 +142,35 @@ export class GoogleSheetsPlantillaEjercicioRepository
     plantillaSesionId: UUID,
     ejercicios: PlantillaEjercicio[],
   ): Promise<void> {
-    const current = await this.findBySesion(plantillaSesionId);
-    const nextIds = new Set(ejercicios.map((item) => item.Plantilla_Ejercicio_ID));
-    const removed = current.filter((item) => !nextIds.has(item.Plantilla_Ejercicio_ID));
-    if (removed.length) {
-      throw new UnsupportedRepositoryOperationError(
-        "replaceForSesion cannot remove rows because physical deletion is disabled",
-      );
+    const table = await this.loadTable();
+    const loaded = this.mapEntities(table);
+    const current = loaded.filter(
+      (item) => item.entity.Plantilla_Sesion_ID === plantillaSesionId,
+    );
+    const desiredIds = new Set(ejercicios.map((item) => item.Plantilla_Ejercicio_ID));
+    if (desiredIds.size !== ejercicios.length) {
+      throw new Error("Plantilla_Ejercicio_ID duplicated in replacement");
     }
-    for (const ejercicio of ejercicios) await this.save(ejercicio);
+    const currentById = new Map(current.map((item) => [item.id, item]));
+    const reusableRows = current
+      .filter((item) => !desiredIds.has(item.id))
+      .map((item) => item.rowNumber);
+    let nextRowNumber = Math.max(1, ...table.rows.map((row) => row.rowNumber)) + 1;
+    const changes = ejercicios.map((ejercicio) => {
+      const existing = currentById.get(ejercicio.Plantilla_Ejercicio_ID);
+      const rowNumber = existing?.rowNumber ?? reusableRows.shift() ?? nextRowNumber++;
+      return {
+        rowNumber,
+        values: this.recordToRow(this.mapper.toRecord(ejercicio), table.headers),
+      };
+    });
+    changes.push(
+      ...reusableRows.map((rowNumber) => ({
+        rowNumber,
+        values: table.headers.map(() => ""),
+      })),
+    );
+    await this.dataSource.batchUpdateRows(this.sheet, changes);
   }
 }
 

@@ -68,4 +68,26 @@ export class GoogleSheetsClient implements SheetsDataSource {
       requestBody: { values: [Array.from(values)] },
     });
   }
+
+
+  async batchUpdateRows(
+    sheet: SheetName,
+    rows: ReadonlyArray<{ rowNumber: number; values: readonly SheetCell[] }>,
+  ): Promise<void> {
+    if (!rows.length) return;
+    if (rows.some((row) => !Number.isInteger(row.rowNumber) || row.rowNumber < 2)) {
+      throw new Error("Invalid data row number");
+    }
+    await this.api.spreadsheets.values.batchUpdate({
+      spreadsheetId: this.spreadsheetId,
+      requestBody: {
+        valueInputOption: "RAW",
+        data: rows.map((row) => ({
+          range: `'${sheet}'!A${row.rowNumber}`,
+          majorDimension: "ROWS",
+          values: [Array.from(row.values)],
+        })),
+      },
+    });
+  }
 }

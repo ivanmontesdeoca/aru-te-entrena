@@ -11,4 +11,8 @@ export interface SheetsDataSource {
   readTable(sheet: SheetName): Promise<SheetTable>;
   appendRow(sheet: SheetName, values: readonly SheetCell[]): Promise<void>;
   updateRow(sheet: SheetName, rowNumber: number, values: readonly SheetCell[]): Promise<void>;
+  batchUpdateRows(
+    sheet: SheetName,
+    rows: ReadonlyArray<{ rowNumber: number; values: readonly SheetCell[] }>,
+  ): Promise<void>;
 }

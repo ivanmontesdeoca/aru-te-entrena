@@ -22,3 +22,4 @@ La arquitectura de persistencia está resumida en `docs/persistencia-google-shee
 El flujo de autenticación y autorización está documentado en `docs/autenticacion.md`.
 La gestión administrativa de alumnos está documentada en `docs/gestion-alumnos.md`.
 El catálogo administrativo está documentado en `docs/catalogo-ejercicios.md`.
+La gestión de plantillas está documentada en `docs/plantillas.md`.

@@ -38,6 +38,13 @@ class MemorySheetsDataSource implements SheetsDataSource {
   ): Promise<void> {
     this.updated.push({ rowNumber, values: [...values] });
   }
+
+  async batchUpdateRows(
+    sheet: SheetName,
+    rows: ReadonlyArray<{ rowNumber: number; values: readonly SheetCell[] }>,
+  ): Promise<void> {
+    for (const row of rows) await this.updateRow(sheet, row.rowNumber, row.values);
+  }
 }
 
 const alumnoId = randomUUID();
