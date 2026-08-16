@@ -60,4 +60,5 @@ h1, h2, h3 { color: var(--color-text); letter-spacing: -0.025em; }
 .status-danger { background: #f9e6e3; color: #91443f; }
 .status-muted { background: #edf0ee; color: #64706b; }
 @media (max-width: 640px) { .app-page { padding: 1.5rem 1rem 6rem; } body { font-size: .94rem; } }
+@media (min-width: 640px) { main.max-w-3xl dl.grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } main.max-w-3xl dl.grid > div { padding-block: .55rem; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
