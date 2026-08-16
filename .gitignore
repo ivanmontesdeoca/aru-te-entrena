@@ -23,6 +23,11 @@ aru-te-entrena-*.json
 *.key
 *.p12
 *.pfx
+*.jks
+*.keystore
+*.crt
+*.cer
+.env.vault
 /secrets/
 /credentials/
 
@@ -35,6 +40,7 @@ pnpm-debug.log*
 *.tsbuildinfo
 next-env.d.ts
 /.vercel/
+/.firebase/
 /.turbo/
 /coverage/
 /.codex-tmp/
