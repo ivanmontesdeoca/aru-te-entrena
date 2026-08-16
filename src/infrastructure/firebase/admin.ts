@@ -9,8 +9,8 @@ export function getFirebaseAdminAuth() {
     ? applicationDefault()
     : cert({
         projectId: env.FIREBASE_ADMIN_PROJECT_ID,
-        clientEmail: env.FIREBASE_ADMIN_CLIENT_EMAIL,
-        privateKey: env.FIREBASE_ADMIN_PRIVATE_KEY,
+        clientEmail: env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL,
+        privateKey: env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
       });
   const app =
     (getApps().some((candidate) => candidate.name === "[DEFAULT]") ? getApp() : null) ??

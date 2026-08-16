@@ -2,6 +2,9 @@
   "name": "aru-te-entrena",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,7 +15,6 @@
     "test:integration": "node --conditions=react-server --import ./tests/node-runtime-workaround.mjs --import tsx --test tests/integration/**/*.test.ts"
   },
   "dependencies": {
-    "@hookform/resolvers": "latest",
     "clsx": "latest",
     "firebase": "latest",
     "firebase-admin": "latest",
@@ -21,7 +23,6 @@
     "openai": "^7.4.0",
     "react": "latest",
     "react-dom": "latest",
-    "react-hook-form": "latest",
     "server-only": "^0.0.1",
     "tailwind-merge": "latest",
     "zod": "latest"

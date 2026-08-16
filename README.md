@@ -42,3 +42,22 @@ La visión consolidada de capas, módulos, seguridad y lecturas principales est�
 El modelo definitivo de las nueve hojas está en `docs/modelo-datos.md`.
 El asistente supervisado de planificación y su política de privacidad están en `docs/asistente-ia.md`.
 La identidad de marca, paleta y reglas responsive están documentadas en `docs/diseno-visual.md`.
+
+## Deploy / Producción
+
+Esta etapa prepara el proyecto pero no realiza el despliegue. La versión recomendada es Node.js 22 LTS, declarada en `package.json`.
+
+1. Crear el entorno de producción y asignar las variables públicas durante el build y las server-only como secretos.
+2. Configurar `APP_ORIGIN` con el origin HTTPS definitivo, sin comodines ni paths.
+3. En Vercel, cargar el email y private key de la cuenta de servicio como variables; no utilizar una ruta `GOOGLE_APPLICATION_CREDENTIALS` de una computadora local.
+4. Agregar el dominio final en Firebase Authentication → Authorized domains y revisar la plantilla de recuperación.
+5. Desplegar sólo después de completar [el checklist pre-deploy](docs/pre-deploy-checklist.md).
+6. Ejecutar un smoke test de login ADMIN/ALUMNO, autorización, Sheets, OpenAI, recuperación y logout sin usar datos reales innecesarios.
+
+Servicios externos y riesgos operativos:
+
+- Google Sheets API: cuotas por proyecto/usuario y posibles respuestas 429; evitar lecturas repetitivas.
+- Firebase Authentication: cuotas, dominios autorizados y revocación de sesiones.
+- OpenAI API: rate limits, disponibilidad y costo por tokens; la generación ocurre sólo por acción explícita de ADMIN.
+
+La lista definitiva de variables y la estrategia de credenciales se encuentran en [configuración](docs/configuracion.md).
