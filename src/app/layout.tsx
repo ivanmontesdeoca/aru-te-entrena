@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   icons: { icon: "/brand/isotipo-estudio-axis.png", apple: "/brand/isotipo-estudio-axis.png" },
 };
 
+export const runtime = "nodejs";
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html className={poppins.variable} lang="es">
